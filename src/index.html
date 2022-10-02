@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <title>To Do</title>
+</head>
+<body>
+
+    <div class="input-form">
+        <form action="">
+            <label for="ttitle">Title</label>
+            <input type="text" id="ttitle" placeholder="Your task..">
+
+            <label for="tdescription">Description <span class="optional">(optional)</span></label>
+            <input type="text" id="tdescription" placeholder="Details (optional)">
+
+            <label for="tdueDate">Due date <span class="optional">(optional)</span></label>
+            <input type="date" name="dueDate" id="tdueDate">
+
+            <label for="tpriority">Priority</label>
+            <select name="priority" id="tpriority">
+                <option value="important"> Important</option>
+                <option value="standard" selected>Standard</option>
+                <option value="optional"> Optional</option>
+            </select>
+
+            <button id="submit-form" type="button">Submit</button>
+        </form>
+    </div>
+
+    <div class="app">
+        <div class="navbar">Navbar 
+            <button class="new-todo">
+                <span class="material-symbols-outlined">
+                    add
+                    </span>
+            </button>
+            <button class="show-info">
+                <span class="material-symbols-outlined">
+                    info
+                    </span>
+            </button>
+            <button>
+                <span class="material-symbols-outlined">notifications</span>
+            </button>                
+        </div>
+
+
+        <div class="sidebar">Sidebar
+            <div class="top">
+                <div class="calendar">
+                    13 June
+                </div>
+                <div class="upcoming-important"></div>
+            </div>
+            <div class="bot">
+                <div class="projects">
+                    Projects
+                    <ul>Default
+                        <li>Default1</li>
+                        <li>Default2</li>
+                        <li>Default3</li>
+                    </ul>
+                    <ul>Personal
+                        <li>Personal1</li>
+                        <li>Personal2</li>
+                        <li>Personal3</li>
+                    </ul>
+                    <ul>Work
+                        <li>Work1</li>
+                        <li>Work2</li>
+                        <li>Work3</li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="main-body">
+           <div class="current-section"> Default </div>
+           <div class="task-container">
+            <div class="task">
+                <div class="checkbox"><input type="radio" name="" id=""></div>
+                <div class="task-title"> Wash the dishes</div>
+                <div class="due-date">26.6.2022.</div>
+            </div>
+           </div>
+        
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
