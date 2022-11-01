@@ -1,6 +1,5 @@
 export default class Project {
-    constructor(title, arr =[]) {
-        this.title = title
+    constructor(arr =[]) {
         this.tasks = arr;
     }
 

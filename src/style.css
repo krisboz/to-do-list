@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
 
 
 .material-symbols-outlined {
@@ -12,7 +14,7 @@
 
 
 body, html {
-    font-family: "Roboto", sans-serif;
+    font-family: "Quicksand", sans-serif;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -22,6 +24,10 @@ body, html {
 /*----------INPUT FORM ------------*/
 .input-form {
   visibility:hidden;
+}
+
+.input-form-clicked {
+  visibility: visible;
 }
 
 form{
@@ -76,7 +82,7 @@ input[type=submit]:hover {
 .app {
     display: grid;
     grid-template-columns: 0.85fr 3fr;
-    grid-template-rows: 60px 1fr;
+    grid-template-rows: 35px 1fr;
 }
 
 .navbar{
@@ -86,10 +92,15 @@ input[type=submit]:hover {
     border-bottom-right-radius: 5px;
     color: white;
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 55px;
+    padding-right: 55px;
 }
 .sidebar{
     grid-area: 2/1/3/2;
     background-color: #fafafa;
+    padding: 15px;
 }
 .main-body{height: 1000px;
 grid-area: 2/2/3/3;
@@ -97,7 +108,312 @@ grid-area: 2/2/3/3;
 
 
 /*--------------APP STYLING-------------*/
-.task{
+.logo{
+  font-size: 31px;
+  font-family: "Quicksand";
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+  gap: 15px;
+}
+.logo>span{
+  font-size: 28px;
+}
+.nav-buttons{
+  display: flex;
+  gap: 10px;
+}
+.nav-buttons > button {
+  border: none;
+color: white;
+background-color: #2b2b2b00;
+cursor: pointer;
+}
+
+.nav-buttons>button>span {
+  font-size: 26px;
+}
+
+.top {
+  margin-top: 25px;
+  margin-bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  gap: 15px;
+  justify-content: center;
+}
+.calendar {
+  width: 65%;
+  height: 175px;
+  cursor: pointer;
+}
+
+.month  {
+
+  height: 25%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  background-color: red;
+  color: white;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.day {
+  font-size: 82px;
+  font-family: "Roboto";
+  display: flex;
+  padding-top: 10px;
+  padding-bottom: 15px;
+  align-items:  center;
+  justify-content: center;
   border: 1px solid black;
+  border-top: none;
+  background-color: #ffffff;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  font-weight: 100;
+}
+
+.bot{
+  display: flex;
+  flex-direction: column;
+}
+
+
+.sidebar-section {
+  font-size: 24px;
+  font-weight:700;
+  font-family: "Quicksand";
+  margin-bottom: 5px;
+  height: 1.3em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: 0.5s cubic-bezier(.8,.12,.48,1);
+
+}
+
+.sidebar-section:hover {
+  padding-left: 1em;
+}
+
+.pie {
+  --p:60;
+  --b:22px;
+  --w:24px;
+  --c:#3c1f76;
+
+  width: var(--w);
+  aspect-ratio: 1;
+  position: relative;
+
+  display: inline-grid;
+  margin: 5px;
+  place-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  font-family: sans-serif;
+  animation: p 1s .5s both;
+
+}
+.pie:before,
+.pie:after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+}
+
+.pie:before{
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  inset: 0;
+  background: conic-gradient(var(--c) calc(var(--p)*1%),#0000 0);
+}
+
+.animate {
+  animation: p 1s .5s both;
+}
+@keyframes p{
+  from{--p:0}
+}
+
+
+
+
+.projects > div > h3 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+
+}
+
+.project {
+  display: flex;
+  border: 1px solid #3c1f76;
+  background-color: white;
+  color: black;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 7px;
+  padding-left: 5px;
+  padding-right: 5px;
+  cursor: pointer;
+}
+
+.projects-header{
+  border-bottom: 1px solid #2b2b2b56;  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 15px;
+  padding-right: 15px;
+  height: 3em;
+}
+
+.projects-header > button {
+  border: none;
+  background-color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.projects-header>button:hover {
+  color: blue;
+}
+
+.projects-header>h3{
+  font-weight: 300;
+}
+
+.project-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  gap: 10px;
+  visibility: collapse;
+  transition: 0.5s;
+}
+
+.project-form >input {
+  height: 24px;
+  width: 75%;
+}
+
+.project-form >button {
+  height: 24px;
+  background-color: #3c1f76;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+}
+
+.projects-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.act-proj-cont {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: inherit;
+}
+
+.project-clicked{
+  background-color: #3c1f76;
+  color: white;
+}
+.project-clicked > .pie-cont > .pie {
+  --c:white;
+
+}
+.project-title{
+  padding-left: 1em;
+  font-size: 20px;
+  font-weight: 800;
+  width: 205px;
+  overflow: hidden;
+}
+.project-right {
+  display: flex;
+  align-items: center;
+  
+}
+
+
+
+.task-container {
+  padding: 55px;
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+ 
+}
+
+.task{
+  border-bottom: 1px solid #2b2b2b53;
+  display: flex;
+  padding: 12px;
+  justify-content: space-between;
+
+}
+
+.task-left, .task-right {
+  display: flex;
+  gap: 8px;
+}
+
+.checkbox > input[type=checkbox]{
+  height: 1.25rem;
+  width: 1.25rem;
+  background: #0d63b9;
+  border: 1px solid #94a3b8;
+  border-radius: 10rem;
+}
+
+.checkbox > input[type=checkbox]::after{
+  content:"";
+  width: 0.3rem;
+  height: 0.6rem;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transition: background 250ms;
+  transform: rotate(45deg);
+}
+
+.due-date{
+  color: #2b2b2ba3;
+}
+
+.description {
+  font-size: 12px;
+  font-weight: 100;
+}
+
+.task-right>div>button{
+background-color: white;
+text-decoration: none;
+border: none;
+cursor: pointer;
+transition: 0.5s;
+}
+
+.edit>button:hover{
+  color: blue;
+}
+
+.delete > button:hover {
+  color: red;
 }
 
