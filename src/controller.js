@@ -22,7 +22,7 @@ const addProjectToModel = (name) => {
 }
 
 
-//Grabs the appropriate array from model based on currSel
+//SELECTS TASK ARRAY BASED ON CURRENT SELECTION
 const getCurrentModelSelection = () => {
   if(Model[`${Model.currentSelection}`]) {
     return (Model[`${Model.currentSelection}`])
@@ -35,13 +35,16 @@ const getCurrentModelSelection = () => {
 
 export  function controller(project, todo)  {
   DOM.initialRender(Model.currentSelection);
+  DOM.renderTasks(Model[`${Model.currentSelection}`])
 
    //Input form event listener
     document.querySelector("#submit-form").addEventListener("click", ()=>{
       let res =   getInputData();
+      console.log(res)
       let target = getCurrentModelSelection();
-      let newTask = new Todo(res.title, res.description, res.dueDate, res.priority)
+      let newTask = new Todo(res.title, res.description, res.dueDate, res.priority, false)
       target.push(newTask)
+
       DOM.renderTasks(target)
       //Add it to the model
       
@@ -50,7 +53,7 @@ export  function controller(project, todo)  {
     })
 
 
-    //Event listener for adding a new project
+    //EVENT LISTENER FOR ADDING A NEW PROJECT
     document.querySelector(".new-project").addEventListener("click", (e) =>{
      const form =  document.querySelector(".project-form");
      form.style.visibility = "visible"
@@ -59,16 +62,14 @@ export  function controller(project, todo)  {
       let text = document.querySelector(".input-project-name")
       if(text.value !== "") {
         form.style.visibility = "collapse"
-        Model.addProject(text.value)
+        Model.addProject(text.value.replace(/\s+/g, '-').toLowerCase())
         DOM.renderProjects()
-        console.log(Model.projects)
         text.value = ""
-
       }
     }})});
 
 
-    //Event listener for adding new Task
+    //EVENT LISTENER FOR ADDING A NEW TASK
     document.querySelector(".nav-buttons").addEventListener("click", (e)=>{
       //console.log(e.target.parentNode.className)
       switch(e.target.parentNode.className) {
@@ -83,10 +84,8 @@ export  function controller(project, todo)  {
       }
     })
 
-
-    //Event listener for sidebar that changes current selection
-    //and displays the TODOS
-    document.querySelector(".sidebar").addEventListener("click", (e)=>{
+    // HOME/TODAY/NOTES MENU EVENT LISTENERS
+    document.querySelector(".projects").addEventListener("click", (e) => {
       if(e.target.classList.contains("sidebar-section")) {
         //Handles the predefined Home, Today and Notes
         Model.changeCurrSelection(e.target.classList[0])
@@ -98,14 +97,85 @@ export  function controller(project, todo)  {
         }
 
 
-      }else if (e.target.parentNode.classList.contains("project")){
-        //Handles the custom made Projects
-        console.log(e.target.parentNode.id)
-        Model.changeCurrSelection(e.target.parentNode.id)
-        DOM.renderTasks(Model.projects[`${Model.currentSelection}`])
-        //Set it as the current selection
-        //Render the Tasks
       }
+    })
+
+    //PROJECT EVENT LISTENERS
+    document.querySelector(".act-proj-cont").addEventListener("click", e => {
+      const currId = e.target.closest(".project").id
+      //RENDER PROJECTS
+      if (e.target.nodeName === "DIV") {
+        Model.changeCurrSelection(currId)
+        DOM.renderTasks(Model.projects[`${Model.currentSelection}`])
+        //DELETE PROJECT
+      } else if (e.target.nodeName === "SPAN") {
+        if(confirm("Are you sure you want to delete the project?") == true) {
+          delete Model.projects[`${currId}`]
+          DOM.renderProjects()
+        }
+
+      }
+    })
+
+
+
+    //EVENTS FOR EACH AND EVERY TASK
+    document.querySelector(".task-container").addEventListener("click", e => {
+      const modelIdSearch = (id) => {
+        let answer;
+        getCurrentModelSelection().forEach(element => {
+          if(element.id === id) {
+            answer = element
+          }
+        });
+      return answer
+       }
+
+       if(e.target.closest(".task") !== null) {
+        const id = e.target.closest(".task").id
+        const pieId = Model.currentSelection
+        const targetInModel = modelIdSearch(id);
+
+        const modelDoneStuff = (id, percentage) => {
+          console.log(targetInModel, )
+
+        }
+
+        switch(e.target.nodeName) {
+         case "INPUT":
+           //CHECK IF TASK IS DONE AND MODIFY DATA ACCORDINGLY 
+           switch(e.target.checked){
+             case true: 
+               targetInModel.done = true;
+               DOM.renderPie(pieId, Model.getDonePercentage(getCurrentModelSelection()))
+               break;
+             case false:
+                targetInModel.done = false;
+                DOM.renderPie(pieId, Model.getDonePercentage(getCurrentModelSelection()))
+
+               break;
+           }
+           break;
+           //CHECK IF EDIT OR DELETE WAS PRESSED AND EDIT OR DELETE
+           case "SPAN":
+             switch(e.target.closest("div").className){
+               case "edit":
+                 console.log("Edit funkcija");
+                 console.log(targetInModel)
+                 break;
+               case "delete":
+                 let index = getCurrentModelSelection().indexOf(targetInModel);
+                 getCurrentModelSelection().splice(index, 1)
+                 DOM.renderTasks(getCurrentModelSelection())
+                 DOM.renderPie(pieId, Model.getDonePercentage(getCurrentModelSelection()))
+
+                 break;
+             }
+             break
+        }
+
+       }
+
     })
 
     //handle dates
@@ -117,37 +187,10 @@ export  function controller(project, todo)  {
     //  Editing and deleting tasks
 
     //Deleting projects
-    document.querySelector(".act-proj-cont").addEventListener("click", e=> {
-      if(e.target !== null) {
-        console.log(e.target.parentNode)
-      }
-      
-    })
-
-
-
-
-    // Pie chart in projects
 
 
     //Render tasks based on the getModelSelection function
 
 
-
-
-const example5 = {
-  title:"Test again the thing",
-  description:"Explanation of how I again the thing",
-  dueDate:"30.03.1993.",
-  priority:"standard"
-}
-
-
-
-
-
-document.querySelector(".projects").addEventListener("click", (e)=>{
-  //console.log(e.target.tagName)
-})
 }
 

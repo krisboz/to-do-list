@@ -202,8 +202,9 @@ cursor: pointer;
   padding-left: 1em;
 }
 
+
 .pie {
-  --p:60;
+  --p:0;
   --b:22px;
   --w:24px;
   --c:#3c1f76;
@@ -232,6 +233,7 @@ cursor: pointer;
   content: "";
   position: absolute;
   border-radius: 50%;
+  border: 1px solid #3c1f76;
   inset: 0;
   background: conic-gradient(var(--c) calc(var(--p)*1%),#0000 0);
 }
@@ -351,6 +353,14 @@ cursor: pointer;
   
 }
 
+.delete-project > span {
+  transition: 0.5s;
+}
+
+.delete-project > span:hover {
+  color: rgb(205, 0, 0);
+}
+
 
 
 .task-container {
@@ -373,6 +383,7 @@ cursor: pointer;
   display: flex;
   gap: 8px;
 }
+
 
 .checkbox > input[type=checkbox]{
   height: 1.25rem;

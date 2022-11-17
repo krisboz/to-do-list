@@ -153,10 +153,10 @@ const DOM = (()=>{
     const renderProject =(name)=>{
         const container =  document.querySelector(".act-proj-cont")
         let projectTemplate = `<div class="project" id="${name}">
-        <div class="project-title">${name}</div>
+        <div class="project-title">${name.replace(/-/g, ' ').replace(/^./, function(x){return x.toUpperCase()})}</div>
         <div class="project-right">
         <div class="pie-cont">
-        <div class="pie "></div>
+        <div class="pie" id="${name}pie"></div>
     </div>
         <div class="delete-project"><span class="material-symbols-outlined">
             cancel
@@ -164,6 +164,12 @@ const DOM = (()=>{
             </div>
     </div>`
     container.insertAdjacentHTML("beforeend", projectTemplate)
+
+    }
+
+    const renderPie = (id, percentage) => {
+        const target = document.getElementById( `${id}pie`)
+        target.style.setProperty("--p",  percentage)
 
     }
 
@@ -200,12 +206,19 @@ const DOM = (()=>{
         const title = document.querySelector(".mainbody-title")
         container.innerHTML = "";
         title.innerHTML= Model.currentSelection
+
+        const checkCheckbox = (el) => {
+            if (el.done === true) {
+                return "checked"
+            } else return " "
+        }
+
         const generateTemplate = (el) => {
             let taskTemplate = `
-            <div class="task">
+            <div class="task" id="${el.id}">
             <div class="task-left">
-            <div class="checkbox"><input type="checkbox" name="" id=""></div>
-            <div class="title-and-date">
+            <div class="checkbox"><input type="checkbox" name="" id="${el.id}"  ${checkCheckbox(el)}></div>
+            <div class="title-and-date">    
             <div class="task-title"> ${el.title}</div>
             <div class="due-date">${el.dueDate}</div>
             </div>
@@ -275,6 +288,7 @@ const DOM = (()=>{
         initialRender,
         drawTask,
         renderProjects,
+        renderPie,
         renderTasks,
         toggleInputForm
     }
