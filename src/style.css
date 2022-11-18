@@ -371,6 +371,11 @@ cursor: pointer;
  
 }
 
+.mainbody-title {
+  margin-left: 15px;
+  padding-left: 15px;
+}
+
 .task{
   border-bottom: 1px solid #2b2b2b53;
   display: flex;

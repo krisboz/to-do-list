@@ -2,7 +2,9 @@ import Project from "./project";
 import Todo from "./todo";
 import DOM from "./handleDom"
 import Model from "./model"
+import  {format} from "date-fns"
 //import {openInputForm} from "./handleDom"
+
 
 
 function getInputData() {
@@ -37,10 +39,13 @@ export  function controller(project, todo)  {
   DOM.initialRender(Model.currentSelection);
   DOM.renderTasks(Model[`${Model.currentSelection}`])
 
+  console.log(format(Date.now(), "yyyy-MM-dd"))
+
+  Model.populateToday()
+
    //Input form event listener
     document.querySelector("#submit-form").addEventListener("click", ()=>{
       let res =   getInputData();
-      console.log(res)
       let target = getCurrentModelSelection();
       let newTask = new Todo(res.title, res.description, res.dueDate, res.priority, false)
       target.push(newTask)
@@ -49,7 +54,6 @@ export  function controller(project, todo)  {
       //Add it to the model
       
       DOM.toggleInputForm();
-      console.log(Model)
     })
 
 
@@ -89,6 +93,9 @@ export  function controller(project, todo)  {
       if(e.target.classList.contains("sidebar-section")) {
         //Handles the predefined Home, Today and Notes
         Model.changeCurrSelection(e.target.classList[0])
+        if(Model.currentSelection === "today") {
+          Model.populateToday()
+        }
         if(Model.currentSelection === "notes") {
           //TODO Notes
           console.log("It was the notes")
@@ -133,6 +140,7 @@ export  function controller(project, todo)  {
 
        if(e.target.closest(".task") !== null) {
         const id = e.target.closest(".task").id
+        //For rendering pie charts, determines the DOM target
         const pieId = Model.currentSelection
         const targetInModel = modelIdSearch(id);
 
@@ -168,7 +176,7 @@ export  function controller(project, todo)  {
                  getCurrentModelSelection().splice(index, 1)
                  DOM.renderTasks(getCurrentModelSelection())
                  DOM.renderPie(pieId, Model.getDonePercentage(getCurrentModelSelection()))
-
+              //TODO MAKNIT MODEL.CURRENTSELECTION
                  break;
              }
              break

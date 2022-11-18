@@ -1,4 +1,6 @@
 import Model from "./model";
+import  {format, getMonth} from "date-fns"
+
 
 function initialLoad() {
     const app = document.querySelector(".app");
@@ -18,7 +20,7 @@ function initialLoad() {
 const taskHTML = `
 <div class="task">
 <div class="task-left">
- <div class="checkbox"><input type="checkbox" name="" id=""></div>
+ <div class="checkbox"><input type="checkbox" name="" id="" value="${format(Date.now(), "yyyy-MM-dd")}"></div>
  <div class="title-and-date">
      <div class="task-title"> Wash the dishes</div>
      <div class="due-date">26.6.2022.</div>
@@ -114,12 +116,13 @@ const DOM = (()=>{
     }
 
     const renderSidebar=()=>{
+        const months =  ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         const sidebarTemplate = `
         <div class="sidebar">
             <div class="top">
                 <div class="calendar">
-                    <div class="month">September</div>
-                    <div class="day">25</div>
+                    <div class="month">${months[getMonth(Date.now())]}</div>
+                    <div class="day">${format(Date.now(), "dd")}</div>
                 </div>
                 <div class="upcoming-important"></div>
             </div>
@@ -205,7 +208,7 @@ const DOM = (()=>{
         const container = document.querySelector(".task-container")
         const title = document.querySelector(".mainbody-title")
         container.innerHTML = "";
-        title.innerHTML= Model.currentSelection
+        title.innerHTML= Model.currentSelection.toUpperCase()
 
         const checkCheckbox = (el) => {
             if (el.done === true) {

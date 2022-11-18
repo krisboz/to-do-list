@@ -1,4 +1,6 @@
-const getId = (title) =>{
+import {format} from "date-fns"
+
+const setId = (title) =>{
   const truncateText = (text, length) => {
       if (text.length <= length) {
         return text;
@@ -17,10 +19,11 @@ export default class Todo {
     constructor(title, description, dueDate, priority, done=false) {
         this.title = title;
         this.description = description
-        this.dueDate = dueDate
+        this.dueDate = format(new Date(dueDate), "dd/MM/yyyy")
         this.priority = priority
         this.done = done
 
-        this.id = getId(this.title);
+        this.id = setId(this.title);
+
     }
 }
