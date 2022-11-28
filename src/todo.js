@@ -19,7 +19,7 @@ export default class Todo {
     constructor(title, description, dueDate, priority, done=false) {
         this.title = title;
         this.description = description
-        this.dueDate = format(new Date(dueDate), "dd/MM/yyyy")
+        this.dueDate = new Date(dueDate)
         this.priority = priority
         this.done = done
 

@@ -2,7 +2,8 @@ import Project from "./project";
 import Todo from "./todo";
 import DOM from "./handleDom"
 import Model from "./model"
-import  {format} from "date-fns"
+import  {format, getDate} from "date-fns"
+
 //import {openInputForm} from "./handleDom"
 
 
@@ -48,7 +49,10 @@ export  function controller(project, todo)  {
       let res =   getInputData();
       let target = getCurrentModelSelection();
       let newTask = new Todo(res.title, res.description, res.dueDate, res.priority, false)
+      console.log(res.dueDate)
       target.push(newTask)
+      Model.populateImportant()
+      DOM.renderAllPriorites();
 
       DOM.renderTasks(target)
       //Add it to the model
@@ -88,37 +92,65 @@ export  function controller(project, todo)  {
       }
     })
 
-    // HOME/TODAY/NOTES MENU EVENT LISTENERS
-    document.querySelector(".projects").addEventListener("click", (e) => {
-      if(e.target.classList.contains("sidebar-section")) {
-        //Handles the predefined Home, Today and Notes
-        Model.changeCurrSelection(e.target.classList[0])
-        if(Model.currentSelection === "today") {
-          Model.populateToday()
-        }
-        if(Model.currentSelection === "notes") {
-          //TODO Notes
-          console.log("It was the notes")
-        } else {
-            DOM.renderTasks(Model[`${Model.currentSelection}`])
-        }
+    //NEW ADD BUTTON EVENT LISTENERS
+    document.querySelector(".current-section").addEventListener("click", e=> {
+      //console.log(e.target.closest(".new-todo"))
+      if(e.target.closest(".new-todo")) {
 
+        DOM.toggleInputForm()
 
       }
     })
 
+    const getDateDifference = (dateOfTheTask) => {
+      const today = Date.now()
+      console.log(today)
+    }
+
+    getDateDifference();
+
+
+    // HOME/TODAY/NOTES MENU EVENT LISTENERS
+    document.querySelector(".top").addEventListener("click", (e) => {
+      if(e.target.classList.contains("sidebar-section")) {
+        //Handles the predefined Home, Today and Notes
+        Model.changeCurrSelection(e.target.classList[0])
+        if(Model.currentSelection === "today") {
+          document.querySelector(".new-todo").style.visibility = "hidden"
+          Model.populateToday()
+          DOM.renderTasks(Model[`${Model.currentSelection}`])
+
+
+        } else if(Model.currentSelection === "notes") {
+          //TODO Notes
+          console.log("It was the notes")
+        } else {
+            DOM.renderTasks(Model[`${Model.currentSelection}`])
+            console.log("I'm the else")
+            document.querySelector(".new-todo").style.visibility = "visible"
+
+        }
+        //TODO MAKE IT WAY MORE EFFECTIVE, RENDERING AND REMOVING THE ADD NTASK BUTTON
+        //////////////TODO
+        //DOM.toggleSidebarMenuClicked()
+      }
+    })
+
     //PROJECT EVENT LISTENERS
-    document.querySelector(".act-proj-cont").addEventListener("click", e => {
+    document.querySelector(".projects-container").addEventListener("click", e => {
       const currId = e.target.closest(".project").id
       //RENDER PROJECTS
       if (e.target.nodeName === "DIV") {
         Model.changeCurrSelection(currId)
         DOM.renderTasks(Model.projects[`${Model.currentSelection}`])
+        document.querySelector(".new-todo").style.visibility = "visible"
         //DELETE PROJECT
       } else if (e.target.nodeName === "SPAN") {
         if(confirm("Are you sure you want to delete the project?") == true) {
           delete Model.projects[`${currId}`]
           DOM.renderProjects()
+          Model.populateImportant()
+          DOM.renderAllPriorites();
         }
 
       }
@@ -144,11 +176,6 @@ export  function controller(project, todo)  {
         const pieId = Model.currentSelection
         const targetInModel = modelIdSearch(id);
 
-        const modelDoneStuff = (id, percentage) => {
-          console.log(targetInModel, )
-
-        }
-
         switch(e.target.nodeName) {
          case "INPUT":
            //CHECK IF TASK IS DONE AND MODIFY DATA ACCORDINGLY 
@@ -163,6 +190,8 @@ export  function controller(project, todo)  {
 
                break;
            }
+           Model.populateImportant()
+           DOM.renderAllPriorites();
            break;
            //CHECK IF EDIT OR DELETE WAS PRESSED AND EDIT OR DELETE
            case "SPAN":
@@ -176,6 +205,8 @@ export  function controller(project, todo)  {
                  getCurrentModelSelection().splice(index, 1)
                  DOM.renderTasks(getCurrentModelSelection())
                  DOM.renderPie(pieId, Model.getDonePercentage(getCurrentModelSelection()))
+                 Model.populateImportant()
+                 DOM.renderAllPriorites();
               //TODO MAKNIT MODEL.CURRENTSELECTION
                  break;
              }
@@ -185,16 +216,6 @@ export  function controller(project, todo)  {
        }
 
     })
-
-    //handle dates
-
-
-    //handle priority
-
-
-    //  Editing and deleting tasks
-
-    //Deleting projects
 
 
     //Render tasks based on the getModelSelection function

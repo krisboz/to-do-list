@@ -1,79 +1,10 @@
 import Model from "./model";
-import  {format, getMonth} from "date-fns"
+import  {format, getMonth, differenceInCalendarDays} from "date-fns"
 
-
-function initialLoad() {
-    const app = document.querySelector(".app");
-
-    const projectHTML = `                    <div class="project">
-    <div class="project-title">Default</div>
-    <div class="project-right"></div>
-    <div class="pie-cont">
-    <div class="pie "></div>
-</div>
-    <div class="delete-project"><span class="material-symbols-outlined">
-        cancel
-        </span></div>
-</div>
-` //još .clicked-project za odabrani
-
-const taskHTML = `
-<div class="task">
-<div class="task-left">
- <div class="checkbox"><input type="checkbox" name="" id="" value="${format(Date.now(), "yyyy-MM-dd")}"></div>
- <div class="title-and-date">
-     <div class="task-title"> Wash the dishes</div>
-     <div class="due-date">26.6.2022.</div>
- </div>
- <div class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quibusdam veritatis ipsa.</div>
-</div>
-<div class="task-right">
- <div class="edit">
-     <button><span class="material-symbols-outlined">
-         edit
-         </span></button>
- </div>
- <div class="delete">
-     <button><span class="material-symbols-outlined">
-         delete
-         </span></button>
- </div>
-</div>
-
-
-</div>`
-
-    const navbar = ``;
-    const sidebar = ``;
-    const mainBody = ``;
-}
 
 const DOM = (()=>{
     const app = document.querySelector(".app");
-    const templates = {
-        inputForm: `    <div class="input-form">
-        <form action="">
-            <label for="ttitle">Title</label>
-            <input type="text" id="ttitle" placeholder="Your task..">
-    
-            <label for="tdescription">Description <span class="optional">(optional)</span></label>
-            <input type="text" id="tdescription" placeholder="Details (optional)">
-    
-            <label for="tdueDate">Due date <span class="optional">(optional)</span></label>
-            <input type="date" name="dueDate" id="tdueDate">
-    
-            <label for="tpriority">Priority</label>
-            <select name="priority" id="tpriority">
-                <option value="important"> Important</option>
-                <option value="standard" selected>Standard</option>
-                <option value="optional"> Optional</option>
-            </select>
-    
-            <button id="submit-form" type="button">Submit</button>
-        </form>
-    </div>`,
-    
-    }
+
 
     const toggleInputForm=()=>{
         const inputForm = document.querySelector(".input-form")
@@ -96,11 +27,6 @@ const DOM = (()=>{
                         </span>
         </div>
         <div class="nav-buttons">
-            <button class="new-todo">
-                <span class="material-symbols-outlined">
-                    add
-                    </span>
-            </button>
             <button class="notifications">
                 <span class="material-symbols-outlined">notifications</span>
             </button> 
@@ -116,34 +42,39 @@ const DOM = (()=>{
     }
 
     const renderSidebar=()=>{
-        const months =  ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         const sidebarTemplate = `
         <div class="sidebar">
             <div class="top">
-                <div class="calendar">
-                    <div class="month">${months[getMonth(Date.now())]}</div>
-                    <div class="day">${format(Date.now(), "dd")}</div>
+            <div class="home sidebar-section">
+                <div class="sidebar-logo">  <span class="material-icons-round">home</span>
                 </div>
-                <div class="upcoming-important"></div>
+            Home</div>
+
+            <div class="today sidebar-section">
+                <div class="sidebar-logo"> <span class="material-icons-round"> today </span>
+            </div>
+            Today</div>
+
+            <div class="notes sidebar-section">
+                <div class="sidebar-logo"> <span class="material-icons-round"> description </span> 
+                </div>
+            Notes</div>
             </div>
             <div class="bot">
                 <div class="projects">
-               <div class="home sidebar-section">Home</div>
-               <div class="today sidebar-section">Today</div>
-               <div class="notes sidebar-section">Notes</div>
-               <div class="projects-container">
-               <div class="projects-header">
-                    <h3>Projects  </h3> 
-                    <button class="new-project">
-                    <span class="material-symbols-outlined">
-                        add
-                        </span>
-                    </div>
-                    <div class="project-form">
-                    <input type="text" class="input-project-name" placeholder="Project name">
-                    <button class="add-project">Add</button>
+                <div class="projects-header">
+                <h3>Projects  </h3> 
+                <button class="new-project">
+                <span class="material-symbols-outlined">
+                    add
+                    </span>
                 </div>
-                <div class="act-proj-cont"></div>
+                <div class="project-form">
+                <input type="text" class="input-project-name" placeholder="Project name">
+                <button class="add-project">Add</button>
+            </div>
+              
+                <div class="projects-container"></div>
                 </div>
                 </div>
             </div>
@@ -153,9 +84,20 @@ const DOM = (()=>{
         renderProjects();
     }
 
+    const toggleSidebarMenuClicked = () => {
+        document.querySelectorAll(".sidebar-section").forEach(element => {
+            if (element.classList[0] === Model.currentSelection) {
+                element.classList.add("sidebar-section-clicked")
+            } else {
+                element.classList.remove("sidebar-section-clicked")
+            }
+        });
+
+    }
+
     const renderProject =(name)=>{
-        const container =  document.querySelector(".act-proj-cont")
-        let projectTemplate = `<div class="project" id="${name}">
+        const container =  document.querySelector(".projects-container")
+        let projectTemplate = `<div class="project" id="${name}"> 
         <div class="project-title">${name.replace(/-/g, ' ').replace(/^./, function(x){return x.toUpperCase()})}</div>
         <div class="project-right">
         <div class="pie-cont">
@@ -177,7 +119,7 @@ const DOM = (()=>{
     }
 
     const renderProjects = () =>{
-        const container = document.querySelector(".act-proj-cont")
+        const container = document.querySelector(".projects-container")
         container.innerHTML= "";
         for(let key in Model.projects) {
             renderProject(key)
@@ -187,7 +129,11 @@ const DOM = (()=>{
 
     const renderMainbody=(name)=>{
         const mainbodyTemplate = `        <div class="main-body">
-        <div class="current-section"> <h2 class="mainbody-title">${name}</h2> </div>
+        <div class="current-section"> <h2 class="mainbody-title">${name}</h2> <button class="new-todo">
+        <span class="material-symbols-outlined">
+            add
+            </span>
+    </button> </div>
         <div class="task-container">
         </div>
      </div>`
@@ -195,20 +141,68 @@ const DOM = (()=>{
         app.insertAdjacentHTML("beforeend", mainbodyTemplate)
     }
 
-    const renderProjectForm = () => {
-        const template = `            <div class="project-form">
-        <input type="text" placeholder="Project name">
-        <button class="add-project">Add</button>
-    </div>`
+    const toggleAddNewBtn = () => {
+        let target = document.querySelector(".new-todo") 
+        if (target.style.visibility === "hidden") {
+            target.style.visibility = "visible"
+        } else {
+            target.style.visibility = "hidden"
+        }
     }
 
+    const renderUpcomingPriority = (el) => {
+        //Name, Date, From which project?
+        const container = document.querySelector(".upcoming-container")
+        const template = `
+        <div class="upcoming-card">
+             <div class="upcoming-date"> ${format(el.dueDate, "dd/MM/yyyy")} </div>
+             <div class="upcoming-name"> ${el.title}</div>
+            <div class="upcoming-time"> ${differenceInCalendarDays(el.dueDate, Date.now())} days </div>
+        </div>
+        `
+        //console.log(differenceInCalendarDays(format(el.dueDate, "MM dd yyyy"), Date.now()))
+        container.insertAdjacentHTML("beforeend", template)
+    }
 
+    const renderAllPriorites = () => {
+        document.querySelector(".upcoming-container").textContent="  "
+        if(Model.important.length>0) {
+            Model.important.forEach(el=>{
+                renderUpcomingPriority(el)
+            })
+        }
+
+    }
+
+    const renderOtherSidebar=()=>{
+        const months =  ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
+        const container = document.querySelector(".app")
+        const sidebarTemplate = `
+        <div class="right-sidebar"> 
+        <div class="calendar-container"> 
+            <div class="calendar">
+                <div class="month">${months[getMonth(Date.now())]}</div>
+                <div class="day">${format(Date.now(), "dd")}</div>
+             </div>
+        </div>
+        
+        <div class="upcoming-header"><h3>     Upcoming priorities</h3></div>
+        <div class="upcoming-container"> 
+            
+        </div>
+        </div>`
+
+        container.insertAdjacentHTML("beforeend", sidebarTemplate)
+        renderAllPriorites()
+    }
 
     const renderTasks = (array) => {
         const container = document.querySelector(".task-container")
         const title = document.querySelector(".mainbody-title")
         container.innerHTML = "";
         title.innerHTML= Model.currentSelection.toUpperCase()
+
 
         const checkCheckbox = (el) => {
             if (el.done === true) {
@@ -223,7 +217,7 @@ const DOM = (()=>{
             <div class="checkbox"><input type="checkbox" name="" id="${el.id}"  ${checkCheckbox(el)}></div>
             <div class="title-and-date">    
             <div class="task-title"> ${el.title}</div>
-            <div class="due-date">${el.dueDate}</div>
+            <div class="due-date">${format(el.dueDate, "dd/MM/yyyy")}</div>
             </div>
             <div class="description">${el.description}</div>
             </div>
@@ -255,6 +249,8 @@ const DOM = (()=>{
         renderNavbar();
         renderSidebar();
         renderMainbody(name);
+        renderOtherSidebar();
+        //renderOtherSidebar
     }
 
     const drawTask = (arg) => {
@@ -293,7 +289,10 @@ const DOM = (()=>{
         renderProjects,
         renderPie,
         renderTasks,
-        toggleInputForm
+        toggleInputForm,
+        toggleSidebarMenuClicked,
+        renderAllPriorites,
+        toggleAddNewBtn
     }
 })();
 

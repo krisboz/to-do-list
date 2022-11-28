@@ -13,18 +13,23 @@ const example8 = new Todo("Test again the thing", "Explanation of how I again th
 const example9 = new Todo("Did the thing", "Explanation of how I did the thing", "1999-11-11", "standard")
 const example10 = new Todo("Test the thing", "Explanation of how to test the thing", "1997-1-11", "standard")
 const example11 = new Todo("Test again the thing", "Explanation of how I again the thing", "2022-03-11", "standard")
+const example12 = new Todo("Test the thing", "Explanation of how to test the thing", "1997-11-15", "standard")
+const example13 = new Todo("Test again the thing", "Explanation of how I again the thing", "2022-03-11", "standard")
+const example14 = new Todo("Did the thing", "Explanation of how I did the thing", "1999-11-11", "standard")
+const example15 = new Todo("Test the thing", "Explanation of how to test the thing", "1997-1-11", "standard")
+const example16 = new Todo("Test again the thing", "Explanation of how I again the thing", "2022-03-11", "standard")
 
 
 let Model =  {
     todayDate: format(Date.now(), "dd/MM/yyyy"),
     currentSelection: "home",
-
-    home: [example1, example2, example3, example4],
+    important:[],
+    home: [example1, example2, example3, example4, example11, example12,example13, example14, example15, example16],
     today:[],
     notes:["Jebanje mame", "U pičku materinu"],
     projects: {
-        "kiki":[example7, example8, example3],
-        "pipi":[example9, example10]
+        "kiki":[example7, example8, example3, example5],
+        "pipi":[example9, example10, example6]
     },
 
 
@@ -63,18 +68,35 @@ let Model =  {
     },
 
     populateToday(){
-
+        this.today = [];
         //All that are today
-        console.log(this.todayDate)
         Object.values(this.projects).forEach(el=> {
             el.forEach(el => {
-                if(el.dueDate === this.todayDate) {
+                if(format(el.dueDate, "dd/MM/yyy") === this.todayDate) {
                     this.today.push(el);
                 }
             });
         })
         console.log(this.today)
+    },
+        
+    populateImportant(){
+        this.important = []
+        Object.values(this.projects).forEach(el=> {
+            el.forEach(el=>{
+                if(el.priority === "important" && el.done === false) {
+                    console.log("bitan")
+                    this.important.push(el)
+
+                }
+            })
+        })
+
+
     }
+    //for sorting I need an array of dates and then arr.sort(compareAsc)
+    //Calculate the difference in days between today and the assigned date
+    // Order them in ascending order (die fruhest am erste)
 
 }
 
