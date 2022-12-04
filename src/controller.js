@@ -35,23 +35,60 @@ const getCurrentModelSelection = () => {
 }
 
 
+//At every call clears LS and populates it with the whole model
+const populateLocalStorage = () => {
+  localStorage.clear();
 
-export  function controller(project, todo)  {
+  const home = JSON.stringify(Model.home)
+  const today = JSON.stringify(Model.today)
+  const important = JSON.stringify(Model.important)
+  localStorage["home"] = home
+  localStorage["today"] = today
+  localStorage["important"] = important
+
+  Object.entries(Model.projects).forEach((el)=>{
+    const key = el[0]
+    const value = JSON.stringify(el[1])
+    localStorage[`${key}`] = value
+  })
+}
+
+const populateModelFromLocalStorage = () => {
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i)
+    const value = JSON.parse(localStorage.getItem(localStorage.key(i)))
+
+    if (key !== "home" && key !== "important" && key !== "today") {
+      console.log(key, value)
+      Model.projects[`${key}`] = value
+      //HERE ARE THE PROJECTS 
+    } else {
+      console.log(key, value)
+      Model[`${key}`] = value
+    }
+    
+  }
+}
+
+
+export  function controller()  {
+  populateModelFromLocalStorage()
   DOM.initialRender(Model.currentSelection);
   DOM.renderTasks(Model[`${Model.currentSelection}`])
 
-  console.log(format(Date.now(), "yyyy-MM-dd"))
+  if(Model.today.length > 0 ) {
+    Model.populateToday()
+  }
 
-  Model.populateToday()
 
    //Input form event listener
     document.querySelector("#submit-form").addEventListener("click", ()=>{
       let res =   getInputData();
       let target = getCurrentModelSelection();
       let newTask = new Todo(res.title, res.description, res.dueDate, res.priority, false)
-      console.log(res.dueDate)
       target.push(newTask)
       Model.populateImportant()
+      populateLocalStorage()
       DOM.renderAllPriorites();
 
       DOM.renderTasks(target)
@@ -71,6 +108,7 @@ export  function controller(project, todo)  {
       if(text.value !== "") {
         form.style.visibility = "collapse"
         Model.addProject(text.value.replace(/\s+/g, '-').toLowerCase())
+        populateLocalStorage()
         DOM.renderProjects()
         text.value = ""
       }
@@ -102,12 +140,7 @@ export  function controller(project, todo)  {
       }
     })
 
-    const getDateDifference = (dateOfTheTask) => {
-      const today = Date.now()
-      console.log(today)
-    }
 
-    getDateDifference();
 
 
     // HOME/TODAY/NOTES MENU EVENT LISTENERS
@@ -118,6 +151,7 @@ export  function controller(project, todo)  {
         if(Model.currentSelection === "today") {
           document.querySelector(".new-todo").style.visibility = "hidden"
           Model.populateToday()
+          populateLocalStorage()
           DOM.renderTasks(Model[`${Model.currentSelection}`])
 
 
@@ -151,6 +185,8 @@ export  function controller(project, todo)  {
           DOM.renderProjects()
           Model.populateImportant()
           DOM.renderAllPriorites();
+          populateLocalStorage()
+
         }
 
       }
@@ -191,6 +227,7 @@ export  function controller(project, todo)  {
                break;
            }
            Model.populateImportant()
+           populateLocalStorage()
            DOM.renderAllPriorites();
            break;
            //CHECK IF EDIT OR DELETE WAS PRESSED AND EDIT OR DELETE
@@ -206,6 +243,7 @@ export  function controller(project, todo)  {
                  DOM.renderTasks(getCurrentModelSelection())
                  DOM.renderPie(pieId, Model.getDonePercentage(getCurrentModelSelection()))
                  Model.populateImportant()
+                 populateLocalStorage()
                  DOM.renderAllPriorites();
               //TODO MAKNIT MODEL.CURRENTSELECTION
                  break;
@@ -217,8 +255,6 @@ export  function controller(project, todo)  {
 
     })
 
-
-    //Render tasks based on the getModelSelection function
 
 
 }

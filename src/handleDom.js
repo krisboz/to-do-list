@@ -152,12 +152,17 @@ const DOM = (()=>{
 
     const renderUpcomingPriority = (el) => {
         //Name, Date, From which project?
+        const calculateRemaining = (el) => {
+        if(differenceInCalendarDays(new Date(el.dueDate), Date.now()) > 0 ) {
+            return  `${differenceInCalendarDays(new Date(el.dueDate), Date.now())} days`
+        } else return "Today"
+        }
         const container = document.querySelector(".upcoming-container")
         const template = `
         <div class="upcoming-card">
-             <div class="upcoming-date"> ${format(el.dueDate, "dd/MM/yyyy")} </div>
+             <div class="upcoming-date"> ${format(new Date(el.dueDate), "dd/MM/yyyy")} </div>
              <div class="upcoming-name"> ${el.title}</div>
-            <div class="upcoming-time"> ${differenceInCalendarDays(el.dueDate, Date.now())} days </div>
+            <div class="upcoming-time"> ${calculateRemaining(el)} </div>
         </div>
         `
         //console.log(differenceInCalendarDays(format(el.dueDate, "MM dd yyyy"), Date.now()))
@@ -217,7 +222,7 @@ const DOM = (()=>{
             <div class="checkbox"><input type="checkbox" name="" id="${el.id}"  ${checkCheckbox(el)}></div>
             <div class="title-and-date">    
             <div class="task-title"> ${el.title}</div>
-            <div class="due-date">${format(el.dueDate, "dd/MM/yyyy")}</div>
+            <div class="due-date">${format(new Date(el.dueDate), "dd/MM/yyyy")}</div>
             </div>
             <div class="description">${el.description}</div>
             </div>

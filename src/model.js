@@ -24,12 +24,10 @@ let Model =  {
     todayDate: format(Date.now(), "dd/MM/yyyy"),
     currentSelection: "home",
     important:[],
-    home: [example1, example2, example3, example4, example11, example12,example13, example14, example15, example16],
+    home: [],
     today:[],
     notes:["Jebanje mame", "U pičku materinu"],
     projects: {
-        "kiki":[example7, example8, example3, example5],
-        "pipi":[example9, example10, example6]
     },
 
 
@@ -66,28 +64,28 @@ let Model =  {
         return percentage
 
     },
-
+ 
     populateToday(){
         this.today = [];
         //All that are today
+ 
         Object.values(this.projects).forEach(el=> {
             el.forEach(el => {
-                if(format(el.dueDate, "dd/MM/yyy") === this.todayDate) {
+                if(format(new Date(el.dueDate), "dd/MM/yyy") === this.todayDate) {
                     this.today.push(el);
                 }
             });
         })
-        console.log(this.today)
+    
     },
+     
         
     populateImportant(){
         this.important = []
         Object.values(this.projects).forEach(el=> {
             el.forEach(el=>{
                 if(el.priority === "important" && el.done === false) {
-                    console.log("bitan")
                     this.important.push(el)
-
                 }
             })
         })
